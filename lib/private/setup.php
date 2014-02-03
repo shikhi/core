@@ -161,18 +161,10 @@ class OC_Setup {
 	 * Post installation checks
 	 */
 	public static function postSetupCheck($params) {
-		// setup was successful -> webdav testing now
-		$l = self::getTrans();
-		if (OC_Util::isWebDAVWorking()) {
-			header("Location: ".OC::$WEBROOT.'/');
-		} else {
-
-			$error = $l->t('Your web server is not yet properly setup to allow files synchronization because the WebDAV interface seems to be broken.');
-			$hint = $l->t('Please double check the <a href=\'%s\'>installation guides</a>.',
-				\OC_Helper::linkToDocs('admin-install'));
-
-			OC_Template::printErrorPage($error, $hint);
-			exit();
-		}
+		OC_Util::addStyle('settings', 'settings');
+		OC_Util::addScript('core', 'setupchecks');
+		OC_Util::addScript('core', 'postsetupcheck');
+		$tmpl = new OC_Template('', 'postsetupcheck', 'guest');
+		$tmpl->printPage();
 	}
 }

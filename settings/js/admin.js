@@ -152,4 +152,20 @@ $(document).ready(function(){
 	$('#shareapiExcludeGroups').change(function() {
 		$("#selectExcludedGroups").toggleClass('hidden', !this.checked);
 	});
+
+	OC.SetupChecks.run(function(errors) {
+		var $el = $('#postsetupchecks');
+		var $errorsEl;
+		$el.find('.loading').addClass('hidden');
+		if (errors.length === 0) {
+			$el.find('.success').removeClass('hidden');
+		} else {
+			$errorsEl = $el.find('.errors');
+			for (var i = 0; i < errors.length; i++ ) {
+				$errorsEl.append('<span class="setupwarning">' + errors[i] + '</span>');
+			}
+			$errorsEl.removeClass('hidden');
+			$el.find('.hint').removeClass('hidden');
+		}
+	});
 });

@@ -11,6 +11,7 @@ OC_Util::addStyle( "settings", "settings" );
 OC_Util::addScript( "settings", "admin" );
 OC_Util::addScript( "settings", "log" );
 OC_Util::addScript( 'core', 'multiselect' );
+OC_Util::addScript('core', 'setupchecks');
 OC_App::setActiveNavigationEntry( "admin" );
 
 $tmpl = new OC_Template( 'settings', 'admin', 'user');
@@ -42,7 +43,6 @@ $tmpl->assign('internetconnectionworking', OC_Util::isInternetConnectionEnabled(
 $tmpl->assign('isLocaleWorking', OC_Util::isSetLocaleWorking());
 $tmpl->assign('isPhpCharSetUtf8', OC_Util::isPhpCharSetUtf8());
 $tmpl->assign('isAnnotationsWorking', OC_Util::isAnnotationsWorking());
-$tmpl->assign('isWebDavWorking', OC_Util::isWebDAVWorking());
 $tmpl->assign('has_fileinfo', OC_Util::fileInfoLoaded());
 $tmpl->assign('old_php', OC_Util::isPHPoutdated());
 $tmpl->assign('backgroundjobs_mode', OC_Appconfig::getValue('core', 'backgroundjobs_mode', 'ajax'));
