@@ -172,11 +172,11 @@ class OC_App {
 	 */
 	protected static $enabledAppsCache = array();
 
-	public static function getEnabledApps($forceRefresh = false) {
+	public static function getEnabledApps($forceRefresh = false, $checkUser = true) {
 		if (!OC_Config::getValue('installed', false)) {
 			return array();
 		}
-		if (!$forceRefresh && !empty(self::$enabledAppsCache)) {
+		if (!$forceRefresh && !empty(self::$enabledAppsCache) and $checkUser) {
 			return self::$enabledAppsCache;
 		}
 		$apps = array();
@@ -187,7 +187,7 @@ class OC_App {
 			if ($app === 'files') {
 				continue;
 			}
-			if ($enabled === 'yes') {
+			if ($enabled === 'yes' or (!$checkUser and $enabled !== 'no')) {
 				$apps[] = $app;
 			} else if ($enabled !== 'no') {
 				$groups = json_decode($enabled);
@@ -206,7 +206,7 @@ class OC_App {
 		// Only cache the app list, when the user is logged in.
 		// Otherwise we cache the list with disabled apps, although
 		// the apps are enabled for the user after he logged in.
-		if ($user) {
+		if ($user and $checkUser) {
 			self::$enabledAppsCache = $apps;
 		}
 		return $apps;
@@ -214,16 +214,18 @@ class OC_App {
 
 	/**
 	 * checks whether or not an app is enabled
+	 *
 	 * @param string $app app
+	 * @param bool $checkUser whether to check if the logged in user has access to the app or just check if the app is installed
 	 * @return bool
 	 *
 	 * This function checks whether or not an app is enabled.
 	 */
-	public static function isEnabled($app) {
+	public static function isEnabled($app, $checkUser = true) {
 		if ('files' == $app) {
 			return true;
 		}
-		$enabledApps = self::getEnabledApps();
+		$enabledApps = self::getEnabledApps(false, $checkUser);
 		return in_array($app, $enabledApps);
 	}
 
