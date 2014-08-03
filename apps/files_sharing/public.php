@@ -11,8 +11,7 @@ if ($appConfig->getValue('core', 'shareapi_allow_links', 'yes') !== 'yes') {
 	exit();
 }
 
-if (isset($_GET['t'])) {
-	$token = $_GET['t'];
+if (isset($token)) {
 	$linkItem = OCP\Share::getShareByToken($token, false);
 	if (is_array($linkItem) && isset($linkItem['uid_owner'])) {
 		// seems to be a valid share

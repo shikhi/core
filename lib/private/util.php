@@ -1454,6 +1454,60 @@ class OC_Util {
 	}
 
 	/**
+	 * Converts input to another base using precise bc_math functions, to avoid precision problems.
+	 * @param string $number Number to convert
+	 * @param int $frombase Base of $number
+	 * @param int $tobase Base to convert to
+	 * @return string converted number
+	 */
+	public static function bc_base_convert($number, $frombase, $tobase) {
+		if ($frombase<2 or $tobase<2 or $frombase>64 or $tobase>64) {
+			exit("Invalid base: ".$base);
+		}
+
+		bcscale(0);
+
+		// Convert from base to dec
+		if ($frombase<37) {
+			$number = strtolower($number);
+		}
+		$digits = self::digits($frombase);
+		$size = strlen($number);
+		$dec = "0";
+		for($i=0; $i<$size; $i++) {
+			$element = strpos($digits,$number[$i]);
+			$power = bcpow($frombase,$size-$i-1);
+			$dec = bcadd($dec,bcmul($element,$power));
+		}
+		$dec = (string) $dec;
+
+		if ($tobase != 10) {
+			// Convert from dec to base
+			$value = "";
+			$digits = self::digits($tobase);
+			while($dec > $tobase-1) {
+				$rest = bcmod($dec, $tobase);
+				$dec = bcdiv($dec, $tobase);
+				$value = $digits[$rest].$value;
+			}
+			$value = $digits[intval($dec)].$value;
+		}
+		return (string) $value;
+	}
+
+	/**
+	 * Function to get digits for a specific base
+	 * @param int $base Base of digits
+	 * @return string Digits of specified base
+	 */
+	private static function digits($base) {
+		$digits = "0123456789abcdefghijklmnopqrstuvwxyz";
+		$digits .= "ABCDEFGHIJKLMNOPQRSTUVWXYZ-_";
+		$digits = substr($digits, 0, $base);
+		return (string) $digits;
+	}
+
+	/**
 	 * A human readable string is generated based on version, channel and build number
 	 *
 	 * @return string
