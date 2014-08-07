@@ -83,7 +83,7 @@ class AppEnabledPlugin extends ServerPlugin {
 			throw new Forbidden();
 		}
 
-		$enabled = $this->config->getAppValue('calendar', 'enabled', 'no');
+		$enabled = $this->config->getAppValue($this->app, 'enabled', 'no');
 		if ($enabled === 'yes') {
 			return true;
 		} else if ($enabled === 'no') {
