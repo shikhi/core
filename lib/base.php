@@ -133,7 +133,7 @@ class OC {
 
 		// search the 3rdparty folder
 		OC::$THIRDPARTYROOT = OC::$server->getConfig()->getSystemValue('3rdpartyroot', null);
-		OC::$THIRDPARTYWEBROOT = OC::$server->getConfig()->getSystemValue('3rdpartyroot', null);
+		OC::$THIRDPARTYWEBROOT = OC::$server->getConfig()->getSystemValue('3rdpartyurl', null);
 		
 		if (empty(OC::$THIRDPARTYROOT) && empty(OC::$THIRDPARTYWEBROOT)) {
 			if (file_exists(OC::$SERVERROOT . '/3rdparty')) {
