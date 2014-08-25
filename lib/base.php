@@ -446,6 +446,10 @@ class OC {
 		self::$loader->registerPrefix('Pimple', '3rdparty/Pimple');
 		spl_autoload_register(array(self::$loader, 'load'));
 
+
+		// setup the basic server
+		self::$server = new \OC\Server();
+
 		// make a dummy session available as early as possible since error pages need it
 		self::$session = new \OC\Session\Memory('');
 
@@ -486,7 +490,7 @@ class OC {
 		OC_Util::isSetLocaleWorking();
 
 		// setup 3rdparty autoloader
-		$vendorAutoLoad = OC::$THIRDPARTYROOT . '/3rdparty/autoload.php';
+		$vendorAutoLoad = OC::$THIRDPARTYROOT . '/autoload.php';
 		if (file_exists($vendorAutoLoad)) {
 			require_once $vendorAutoLoad;
 		}
@@ -507,9 +511,6 @@ class OC {
 		stream_wrapper_register('close', 'OC\Files\Stream\Close');
 		stream_wrapper_register('quota', 'OC\Files\Stream\Quota');
 		stream_wrapper_register('oc', 'OC\Files\Stream\OC');
-
-		// setup the basic server
-		self::$server = new \OC\Server();
 
 		self::initTemplateEngine();
 		OC_App::loadApps(array('session'));
