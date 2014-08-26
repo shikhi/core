@@ -49,6 +49,7 @@ class Preview {
 	//filemapper used for deleting previews
 	// index is path, value is fileinfo
 	static public $deleteFileMapper = array();
+	static public $deleteChildrenMapper = array();
 
 	/**
 	 * preview images object
@@ -189,6 +190,21 @@ class Preview {
 		return $this->info;
 	}
 
+
+	/**
+	 * @return array
+	 */
+	private function getChildren() {
+		$absPath = $this->fileView->getAbsolutePath($this->file);
+		$absPath = Files\Filesystem::normalizePath($absPath);
+
+		if (array_key_exists($absPath, self::$deleteChildrenMapper)) {
+			return self::$deleteChildrenMapper[$absPath];
+		} else {
+			return array();
+		}
+	}
+
 	/**
 	 * set the path of the file you want a thumbnail from
 	 * @param string $file
@@ -318,13 +334,20 @@ class Preview {
 		$file = $this->getFile();
 
 		$fileInfo = $this->getFileInfo($file);
-		if($fileInfo !== null && $fileInfo !== false) {
-			$fileId = $fileInfo->getId();
 
-			$previewPath = $this->getThumbnailsFolder() . '/' . $fileId . '/';
-			$this->userView->deleteAll($previewPath);
-			return $this->userView->rmdir($previewPath);
+		$toDelete = $this->getChildren();
+		$toDelete[] = $fileInfo;
+
+		foreach ($toDelete as $delete) {
+			if ($delete !== null && $delete !== false) {
+				$fileId = $delete->getId();
+
+				$previewPath = $this->getThumbnailsFolder() . '/' . $fileId . '/';
+				$this->userView->deleteAll($previewPath);
+				$this->userView->rmdir($previewPath);
+			}
 		}
+
 		return false;
 	}
 
@@ -714,14 +737,47 @@ class Preview {
 		}
 
 		$view = new \OC\Files\View('/' . \OC_User::getUser() . '/' . $prefix);
-		$info = $view->getFileInfo($path);
 
-		\OC\Preview::$deleteFileMapper = array_merge(
-			\OC\Preview::$deleteFileMapper,
+		$absPath = Files\Filesystem::normalizePath($view->getAbsolutePath($path));
+		self::addPathToDeleteFileMapper($absPath, $view->getFileInfo($path));
+		if ($view->is_dir($path)) {
+			$children = self::getAllChildren($view, $path);
+			self::$deleteChildrenMapper[$absPath] = $children;
+		}
+	}
+
+	/**
+	 * @param string $absolutePath
+	 * @param $info
+	 */
+	private static function addPathToDeleteFileMapper($absolutePath, $info) {
+		self::$deleteFileMapper = array_merge(
+			self::$deleteFileMapper,
 			array(
-				Files\Filesystem::normalizePath($view->getAbsolutePath($path)) => $info,
+				$absolutePath => $info,
 			)
 		);
+	}
+
+	/**
+	 * @param \OC\Files\View $view
+	 * @param string $path
+	 * @return array
+	 */
+	private static function getAllChildren($view, $path) {
+		$children = $view->getDirectoryContent($path);
+
+		foreach ($children as $child) {
+			$path = $child->getPath();
+			if ($view->is_dir($path)) {
+				$children = array_merge(
+					$children,
+					$view->getDirectoryContent($path)
+				);
+			}
+		}
+
+		return $children;
 	}
 
 	public static function post_delete_files($args) {
