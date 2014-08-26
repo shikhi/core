@@ -321,7 +321,7 @@ class Preview {
 		if($fileInfo !== null && $fileInfo !== false) {
 			$fileId = $fileInfo->getId();
 
-			$previewPath = $this->getThumbnailsFolder() . '/' . $fileId . '/';
+			$previewPath = $this->getPreviewPath($fileId);
 			$this->userView->deleteAll($previewPath);
 			return $this->userView->rmdir($previewPath);
 		}
@@ -391,7 +391,7 @@ class Preview {
 			return array();
 		}
 
-		$previewPath = $this->getThumbnailsFolder() . '/' . $fileId . '/';
+		$previewPath = $this->getPreviewPath($fileId);
 
 		$wantedAspectRatio = (float) ($this->getMaxX() / $this->getMaxY());
 
@@ -508,7 +508,7 @@ class Preview {
 				$this->preview = $preview;
 				$this->resizeAndCrop();
 
-				$previewPath = $this->getThumbnailsFolder() . '/' . $fileId . '/';
+				$previewPath = $this->getPreviewPath($fileId);
 				$cachePath = $this->buildCachePath($fileId);
 
 				if ($this->userView->is_dir($this->getThumbnailsFolder() . '/') === false) {
@@ -796,12 +796,18 @@ class Preview {
 		$maxX = $this->getMaxX();
 		$maxY = $this->getMaxY();
 
-		$previewPath = $this->getThumbnailsFolder() . '/' . $fileId . '/';
-		$preview = $previewPath . $maxX . '-' . $maxY . '.png';
+		$previewPath = $this->getPreviewPath($fileId);
+		$preview = $previewPath . strval($maxX) . '-' . strval($maxY);
 		if ($this->keepAspect) {
-			$preview = $previewPath . $maxX . '-with-aspect.png';
-			return $preview;
+			$preview .= '-with-aspect';
 		}
+		$preview .= '.png';
+
 		return $preview;
+	}
+
+
+	private function getPreviewPath($fileId) {
+		return $this->getThumbnailsFolder() . '/' . $fileId . '/';
 	}
 }
