@@ -1100,6 +1100,7 @@ function initCore() {
 	$('td .modified').tipsy({gravity:'s', fade:true, live:true});
 	$('td.lastLogin').tipsy({gravity:'s', fade:true, html:true});
 	$('input').tipsy({gravity:'w', fade:true});
+	$('.extra-data').tipsy({gravity:'w', fade:true, live:true});
 
 	// toggle for menus
 	$(document).on('mouseup.closemenus', function(event) {
