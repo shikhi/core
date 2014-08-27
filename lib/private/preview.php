@@ -285,6 +285,10 @@ class Preview {
 		return $this;
 	}
 
+	/**
+	 * @param bool $keepAspect
+	 * @return $this
+	 */
 	public function setKeepAspect($keepAspect) {
 		$this->keepAspect = $keepAspect;
 		return $this;
@@ -557,7 +561,7 @@ class Preview {
 
 	/**
 	 * show preview
-	 * @return void
+	 * @param string $mimeType
 	 */
 	public function showPreview($mimeType = null) {
 		\OCP\Response::enableCaching(3600 * 24); // 24 hours
@@ -686,8 +690,8 @@ class Preview {
 
 	/**
 	 * register a new preview provider to be used
+	 * @param string $class
 	 * @param array $options
-	 * @return void
 	 */
 	public static function registerProvider($class, $options = array()) {
 		self::$registeredProviders[] = array('class' => $class, 'options' => $options);
@@ -722,14 +726,24 @@ class Preview {
 		array_multisort($keys, SORT_DESC, self::$providers);
 	}
 
+	/**
+	 * @param array $args
+	 */
 	public static function post_write($args) {
 		self::post_delete($args, 'files/');
 	}
 
+	/**
+	 * @param array $args
+	 */
 	public static function prepare_delete_files($args) {
 		self::prepare_delete($args, 'files/');
 	}
 
+	/**
+	 * @param array $args
+	 * @param string $prefix
+	 */
 	public static function prepare_delete($args, $prefix='') {
 		$path = $args['path'];
 		if (substr($path, 0, 1) === '/') {
@@ -748,7 +762,7 @@ class Preview {
 
 	/**
 	 * @param string $absolutePath
-	 * @param $info
+	 * @param \OCP\Files\FileInfo $info
 	 */
 	private static function addPathToDeleteFileMapper($absolutePath, $info) {
 		self::$deleteFileMapper = array_merge(
@@ -780,10 +794,17 @@ class Preview {
 		return $children;
 	}
 
+	/**
+	 * @param array $args
+	 */
 	public static function post_delete_files($args) {
 		self::post_delete($args, 'files/');
 	}
 
+	/**
+	 * @param array $args
+	 * @param string $prefix
+	 */
 	public static function post_delete($args, $prefix='') {
 		$path = Files\Filesystem::normalizePath($args['path']);
 
