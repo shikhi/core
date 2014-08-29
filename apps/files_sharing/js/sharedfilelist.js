@@ -181,6 +181,7 @@
 						file.name = OC.basename(share.file_target);
 						file.path = OC.dirname(share.file_target);
 						file.permissions = share.permissions;
+						file.extraData = share.file_target;
 					}
 					else {
 						if (share.share_type !== OC.Share.SHARE_TYPE_LINK) {
@@ -189,6 +190,7 @@
 						file.name = OC.basename(share.path);
 						file.path = OC.dirname(share.path);
 						file.permissions = OC.PERMISSION_ALL;
+						file.extraData = share.path;
 					}
 					return file;
 				})
