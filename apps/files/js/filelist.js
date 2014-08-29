@@ -668,6 +668,9 @@
 				nameSpan.append($('<span></span>').addClass('extension').text(extension));
 			}
 			if (fileData.extraData) {
+				if (fileData.extraData.charAt(0) === '/') {
+					fileData.extraData = fileData.extraData.substr(1);
+				}
 				nameSpan.addClass('extra-data').attr('title', fileData.extraData);
 			}
 			// dirs can show the number of uploaded files
