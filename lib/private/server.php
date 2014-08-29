@@ -469,4 +469,13 @@ class Server extends SimpleContainer implements IServerContainer {
 	function getDb() {
 		return $this->query('Db');
 	}
+
+	/**
+	 * Returns a search instance
+	 *
+	 * @return \OCP\IEventSource
+	 */
+	function getEventSource() {
+		return new \OC_EventSource();
+	}
 }

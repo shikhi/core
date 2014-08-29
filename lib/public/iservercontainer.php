@@ -226,4 +226,11 @@ interface IServerContainer {
 	 */
 	function getSearch();
 
+	/**
+	 * Returns a search instance
+	 *
+	 * @return \OCP\IEventSource
+	 */
+	function getEventSource();
+
 }
