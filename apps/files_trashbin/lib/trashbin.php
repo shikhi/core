@@ -41,6 +41,35 @@ class Trashbin {
 		return array($uid, $filename);
 	}
 
+	/**
+	 * get original location of files for user
+	 *
+	 * @param string $user
+	 * @return array (filename => array (timestamp => original location))
+	 */
+	public static function getLocations($user) {
+		$query = \OC_DB::prepare('SELECT `id`, `timestamp`, `location`'
+			. ' FROM `*PREFIX*files_trash` WHERE `user`=?');
+		$result = $query->execute(array($user));
+		$array = array();
+		while ($row = $result->fetchRow()) {
+			if (isset($array[$row['id']])) {
+				$array[$row['id']][$row['timestamp']] = $row['location'];
+			} else {
+				$array[$row['id']] = array($row['timestamp'] => $row['location']);
+			}
+		}
+		return $array;
+	}
+
+	/**
+	 * get original location of file
+	 *
+	 * @param string $user
+	 * @param string $filename
+	 * @param string $timestamp
+	 * @return string original location
+	 */
 	public static function getLocation($user, $filename, $timestamp) {
 		$query = \OC_DB::prepare('SELECT `location` FROM `*PREFIX*files_trash`'
 			. ' WHERE `user`=? AND `id`=? AND `timestamp`=?');
