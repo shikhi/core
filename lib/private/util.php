@@ -1461,20 +1461,20 @@ class OC_Util {
 	 * @return string converted number
 	 */
 	public static function bc_base_convert($number, $frombase, $tobase) {
-		if ($frombase<2 or $tobase<2 or $frombase>64 or $tobase>64) {
-			exit("Invalid base: ".$base);
+		if ($frombase < 2 or $tobase < 2 or $frombase > 64 or $tobase > 64) {
+			exit("Invalid bases: " . $frombase . " to " . $tobase);
 		}
 
 		bcscale(0);
 
 		// Convert from base to dec
-		if ($frombase<37) {
+		if ($frombase < 37) {
 			$number = strtolower($number);
 		}
 		$digits = self::digits($frombase);
 		$size = strlen($number);
 		$dec = "0";
-		for($i=0; $i<$size; $i++) {
+		for($i=0; $i < $size; $i++) {
 			$element = strpos($digits,$number[$i]);
 			$power = bcpow($frombase,$size-$i-1);
 			$dec = bcadd($dec,bcmul($element,$power));
@@ -1491,6 +1491,8 @@ class OC_Util {
 				$value = $digits[$rest].$value;
 			}
 			$value = $digits[intval($dec)].$value;
+		} else {
+			$value = $dec;
 		}
 		return (string) $value;
 	}
