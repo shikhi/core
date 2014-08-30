@@ -675,7 +675,7 @@ OC.Share={
 			if (service !== 'files') {
 				var link = parent.location.protocol+'//'+location.host+OC.linkTo('', 'public.php')+'?service='+service+'&t='+token;
 			} else {
-				var link = parent.location.protocol+'//'+location.host+OC.generateUrl('/s/')+convertBase(token, 16, 36);
+				var link = parent.location.protocol+'//'+location.host+OC.generateUrl('/s/')+token;
 			}
 		}
 		$('#linkText').val(link);
