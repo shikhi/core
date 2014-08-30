@@ -105,16 +105,6 @@ $this->create('core_share_show_share', '/s/{token}')
 	->get()
 	->action('OC\Core\Share\Controller', 'showShare');
 
-// Not specifically routed
-$this->create('app_index_script', '/apps/{app}/')
-	->defaults(array('file' => 'index.php'))
-	//->requirements(array('file' => '.*.php'))
-	->action('OC', 'loadAppScriptFile');
-$this->create('app_script', '/apps/{app}/{file}')
-	->defaults(array('file' => 'index.php'))
-	->requirements(array('file' => '.*.php'))
-	->action('OC', 'loadAppScriptFile');
-
 // used for heartbeat
 $this->create('heartbeat', '/heartbeat')->action(function(){
 	// do nothing
