@@ -1,7 +1,6 @@
 <div id="postsetupchecks" class="update" data-doclink="<?php p(\OC_Helper::linkToDocs('admin-install')) ?>">
 	<h2 class="title bold"><?php p($l->t('Running post setup checks')) ?></h2>
 	<div class="loading"></div>
-	<div class="success hidden">Success</div>
 	<div class="errors hidden">
 	</div>
 	<div class="hint hidden">

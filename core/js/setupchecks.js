@@ -17,9 +17,9 @@
 		 */
 		checkWebDAV: function() {
 			var deferred = $.Deferred();
-			var afterCall = function(doc, statusText, result) {
+			var afterCall = function(xhr) {
 				var messages = [];
-				if (result.status !== 200 && result.status !== 207 && result.status !== 401) {
+				if (xhr.status !== 207 && xhr.status !== 401) {
 					messages.push(
 						t('core', 'Your web server is not yet properly setup to allow files synchronization because the WebDAV interface seems to be broken.')
 					);
@@ -34,8 +34,7 @@
 						'<d:propfind xmlns:d="DAV:">' +
 						'<d:prop><d:resourcetype/></d:prop>' +
 						'</d:propfind>',
-				error: afterCall,
-				success: afterCall
+				complete: afterCall
 			});
 			return deferred.promise();
 		},
