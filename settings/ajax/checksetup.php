@@ -7,7 +7,10 @@
 
 OC_JSON::checkAdminUser();
 
-$hasInternet = OC_Util::isInternetConnectionEnabled();
+$hasInternet = false;
+if (OC_Util::isInternetConnectionEnabled()) {
+	$hasInternet = OC_Util::isInternetConnectionWorking();
+}
 
 OC_JSON::success(
 	array(

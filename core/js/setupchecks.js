@@ -46,10 +46,10 @@
 		 */
 		checkSetup: function() {
 			var deferred = $.Deferred();
-			var afterCall = function(doc, statusText, result) {
+			var afterCall = function(data, statusText, xhr) {
 				var messages = [];
-				if (result.status === 200) {
-					if (!result.serverhasinternetconnection) {
+				if (xhr.status === 200 && data) {
+					if (!data.serverhasinternetconnection) {
 						messages.push(
 							t('core', 'This server has no working internet connection. This means that some of the features like mounting of external storage, notifications about updates or installation of 3rd party apps don´t work. Accessing files from remote and sending of notification emails might also not work. We suggest to enable internet connection for this server if you want to have all features.')
 						);
@@ -62,10 +62,8 @@
 
 			$.ajax({
 				type: 'GET',
-				url: OC.filePath('settings', 'ajax', 'checksetup.php'),
-				error: afterCall,
-				success: afterCall
-			});
+				url: OC.filePath('settings', 'ajax', 'checksetup.php')
+			}).then(afterCall, afterCall);
 			return deferred.promise();
 		}
 	};
