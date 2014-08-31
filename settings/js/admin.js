@@ -153,7 +153,12 @@ $(document).ready(function(){
 		$("#selectExcludedGroups").toggleClass('hidden', !this.checked);
 	});
 
-	OC.SetupChecks.run(function(errors) {
+	// run setup checks then gather error messages
+	$.when(
+		OC.SetupChecks.checkWebDAV(),
+		OC.SetupChecks.checkSetup()
+	).then(function(check1, check2) {
+		var errors = [].concat(check1, check2);
 		var $el = $('#postsetupchecks');
 		var $errorsEl;
 		$el.find('.loading').addClass('hidden');
@@ -162,7 +167,7 @@ $(document).ready(function(){
 		} else {
 			$errorsEl = $el.find('.errors');
 			for (var i = 0; i < errors.length; i++ ) {
-				$errorsEl.append('<span class="setupwarning">' + errors[i] + '</span>');
+				$errorsEl.append('<div class="setupwarning">' + errors[i] + '</div>');
 			}
 			$errorsEl.removeClass('hidden');
 			$el.find('.hint').removeClass('hidden');

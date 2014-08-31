@@ -163,7 +163,7 @@ table.grid td.date{
 }
 
 /* ADMIN */
-span.securitywarning, span.connectionwarning, span.setupwarning {
+span.securitywarning, span.connectionwarning, .setupwarning {
 	color:#C33;
 	font-weight:bold;
 }
@@ -258,6 +258,11 @@ doesnotexist:-o-prefocus, .strengthify-wrapper {
 #postsetupchecks .loading {
 	height: 50px;
 }
+
 #postsetupchecks.section .loading {
 	background-position: left center;
+}
+
+#postsetupchecks .hint, #postsetupchecks .setupwarning {
+	margin-top: 15px;
 }

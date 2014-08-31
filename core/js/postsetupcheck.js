@@ -10,7 +10,10 @@
 
 $(document).ready(function() {
 	var $el = $('#postsetupchecks');
-	OC.SetupChecks.run(function(errors) {
+	// run setup checks then gather error messages
+	$.when(
+		OC.SetupChecks.checkWebDAV()
+	).then(function(errors) {
 		var $errorsEl = $el.find('.errors');
 		$el.find('.loading').addClass('hidden');
 		if (errors.length === 0) {
